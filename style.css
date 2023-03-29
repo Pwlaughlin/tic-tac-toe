@@ -1,0 +1,19 @@
+
+*{
+    box-sixing: border-box;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80vh;
+    height: 60vh;
+    }
+    .box {
+        width: 20vh;
+        border: 2px solid black;
+        
+        text-align: center;
+
+
+    }
