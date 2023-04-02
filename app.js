@@ -5,7 +5,8 @@ function turn(id){
        state.board[Math.floor(id / 3)][id % 3] = state.currentPlayer;
     renderBoard();
     if(determineWin()){
-      winner();  
+      roundWin();
+      resetboard()  
     }
     else if(determineTie() ){
       tie();
@@ -15,29 +16,78 @@ function turn(id){
     }
 }
 }};
-////Finish this method
+
 function determineWin(){
-  if
-  (state.board[0] [0] == state.currentPlayer){
-   if (state.board[0] [1] == state.currentPlayer){
-    if (state.board[0] [2] == state.currentPlayer){
+  ///rows
+  if(state.board[0][0] === state.currentPlayer && state.board[0] [1] === state.currentPlayer && state.board[0] [2] === state.currentPlayer){
+  return true;
+}
+  if(state.board[1] [0] === state.currentPlayer && state.board[1] [1] === state.currentPlayer && state.board[1] [2] === state.currentPlayer){
+      return true;
+      }
+  if (state.board[2] [0] === state.currentPlayer && state.board[2] [1] === state.currentPlayer && state.board[2] [2] === state.currentPlayer){
       return true;
     }
-   }
+  //columns
+    if (state.board[0] [0] == state.currentPlayer && state.board[1] [0] == state.currentPlayer && state.board[2] [0] == state.currentPlayer){
+      return true;
+    }
+    if (state.board[0] [1] == state.currentPlayer && state.board[1] [1] == state.currentPlayer && state.board[2] [1] == state.currentPlayer){
+      return true;
+    }
+    if (state.board[0] [2] == state.currentPlayer && state.board[1] [2] == state.currentPlayer && state.board[2] [2] == state.currentPlayer){
+      return true;
+    }
+    //// diagnols
+    if (state.board[0] [0] == state.currentPlayer && state.board[1] [1] == state.currentPlayer && state.board[2] [2] == state.currentPlayer){
+      return true;
+    }
+    if (state.board[0] [2] == state.currentPlayer && state.board[1] [1] == state.currentPlayer && state.board[2] [0] == state.currentPlayer){
+      return true;
   }
-}
-//finish this one
-function determineTie(){
- // a tie is when all board positions are not ""
   
-  return false
-}
-function tie(){
-  alert ("Its a tie! Try Again")
 }
 
-function winner(){
-  alert(`Player ${state.currentPlayerName} is the wiener!`)
+
+function determineTie(){
+  const isTie = state.board.every(row => row.every(position => position !== ""));
+  return isTie;
+}
+
+function tie(){
+  let resetButton = document.createElement('button');
+  resetButton.textContent='Reset';
+  resetButton.addEventListener('click', () => {
+    resetState();
+    resetButton.remove();
+  });
+  const message = document.createElement('div');
+  message.textContent = "It's a Tie, Go Again";
+  message.appendChild(resetButton);
+  
+ 
+  document.body.appendChild(message);
+}
+
+
+function roundWin(){
+  alert(`Player ${state.currentPlayerName} won this round!`);
+  let resetButton = document.createElement('button');
+  resetButton.textContent='Reset';
+  resetButton.addEventListener('click', () => {
+    resetState();
+    resetButton.remove();
+  });
+  const message = document.createElement('div');
+  
+  message.appendChild(resetButton);
+  
+ 
+  document.body.appendChild(message);
+  resetState(message);
+ 
+  
+  //winner gets a score of 1
 }
 
 const state = {
@@ -56,16 +106,25 @@ const state = {
 };
 
 const resetState = () => {
-  state.board = [    ['', '', ''],
+  state.board = [   
+    ['', '', ''],
     ['', '', ''],
     ['', '', '']
   ];
-  state.players = ['', ''];
+  state.players = [player1, player2];
   state.score = [0, 0];
+
+  const message = document.querySelector('.message');
+  if (message){
+    message.removeChild(resetButton);
+    document.body.removeChild(message);
+  
+  }
+  
+ 
 };
 
 console.log(state);
-
 
 
 
@@ -83,7 +142,7 @@ titleH1.innerText = 'This is Tick Tack Toe';
 body.appendChild( titleH1)
 //////***********************Render Elements */
 // Main element
-//render board
+
 const renderBoard = () => {
 main.id = 'board';
 main.innerHTML = "";
@@ -93,8 +152,7 @@ for(let i =0; i < 9;  i ++){
     div.innerText = state.board[Math.floor(i / 3)][i % 3];
     div.addEventListener('click',state.boardevents[Math.floor(i / 3)][i % 3]) 
     main.appendChild(div);
-
-}
+  }
 }
 body.appendChild(main);
 
@@ -110,12 +168,8 @@ playerElem.innerHTML = playerElemHTML;
 body.appendChild(playerElem);
 const startButton = document.querySelector('#startButton'); 
 startButton.addEventListener('click', startGame);
-;
 }
-
 renderPlayer();
-
-
 
 function render(){
     renderPlayer();
@@ -124,15 +178,6 @@ function render(){
    
 /////****************************Event Listeners **********************//////
 
-
-//  ^ Prompt the players to enter their names.
-// ^Store the names in the state object.
-// ^Randomly determine which player goes first and store it in the state object.
-// ^Display the current player's name on the screen.
-// ^Add a click event listener to each square on the board to handle player moves.
-// ^Update the state object with the player's move and update the board on the screen.
-// ^Check if there is a winner or if the game is a tie.
-// ^Display the winner or a tie message on the screen.
 // Update the score and display it on the screen.
 // Reset the board for a new game.
 function startGame() {
@@ -159,14 +204,13 @@ function startGame() {
   function switchPlayer(){
     if (state.currentPlayer == "X"){
       state.currentPlayer = 'O'
-state.currentPlayerName = state.players[1]
+        state.currentPlayerName = state.players[1]
     }
     else {
       state.currentPlayer = 'X'
       state.currentPlayerName = state.players[0]
     }
-    
-    renderCurrentPlayerName();
+     renderCurrentPlayerName();
   }
   
   function renderCurrentPlayerName() {
@@ -176,10 +220,10 @@ state.currentPlayerName = state.players[1]
   
   function displayCurrentPlayerName(){
   playerNameElem.removeChild(startButton);
- playerNameElem.removeChild(currentPlayer);
+  playerNameElem.removeChild(currentPlayer);
   createElement.appendChild(currentPlayer);
 
-  }
+ }
 
 resetState ();
 render();
